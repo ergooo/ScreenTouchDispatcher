@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,6 +20,8 @@ public class ScreenTouchDispatcherService extends Service {
     private View touchDispachView;
 
     private LinearLayout rootView;
+
+    private ScreenTouchDispatcherView screenTouchDispatcherView;
     
     @Override
     public void onCreate()
@@ -39,9 +42,22 @@ public class ScreenTouchDispatcherService extends Service {
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT);
 
-        touchDispachView = new View(getApplicationContext());
+        screenTouchDispatcherView = new ScreenTouchDispatcherView(getApplicationContext());
+        screenTouchDispatcherView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        screenTouchDispatcherView.findViewById(R.id.root).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
 
-        getWindowManager().addView(touchDispachView, params);
+
+        getWindowManager().addView(screenTouchDispatcherView, params);
         return START_STICKY;
 
     }
