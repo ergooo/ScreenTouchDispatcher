@@ -45,6 +45,8 @@ public class SettingsActivity extends PreferenceActivity {
                 if (preference.getKey().equals("switcher")) {
                     if (newValue instanceof Boolean) {
                         if ((Boolean) newValue) {
+                            final Intent serviceIntent = new Intent(SettingsActivity.this, ScreenTouchDispatcherService.class);
+                            startService(serviceIntent);
                             NotificationUtils.sendNotification(SettingsActivity.this, "タッチして画面をロック");
                         } else {
                             NotificationUtils.removeNotification(SettingsActivity.this);
