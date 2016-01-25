@@ -22,7 +22,9 @@ public class ScreenTouchDispatcherService extends Service {
     private LinearLayout rootView;
 
     private ScreenTouchDispatcherView screenTouchDispatcherView;
-    
+
+    private DispatcherViewController dispatcherViewController;
+
     @Override
     public void onCreate()
     {
@@ -33,32 +35,30 @@ public class ScreenTouchDispatcherService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
         //画面に常に表示するビューのレイアウトの設定
-        final WindowManager.LayoutParams params
-        = new WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            0, 0,
-            WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT);
+//        final WindowManager.LayoutParams params
+//        = new WindowManager.LayoutParams(
+//            WindowManager.LayoutParams.MATCH_PARENT,
+//            WindowManager.LayoutParams.MATCH_PARENT,
+//            0, 0,
+//            WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+//            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+//            PixelFormat.TRANSLUCENT);
+//
+//        screenTouchDispatcherView = new ScreenTouchDispatcherView(getApplicationContext());
+//
+//
+//
+//        getWindowManager().addView(screenTouchDispatcherView, params);
 
-        screenTouchDispatcherView = new ScreenTouchDispatcherView(getApplicationContext());
-        screenTouchDispatcherView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-        screenTouchDispatcherView.findViewById(R.id.root).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
+        dispatcherViewController = new DispatcherViewController(getApplicationContext());
+        dispatcherViewController.addToWindowManager();
 
-
-        getWindowManager().addView(screenTouchDispatcherView, params);
         return START_STICKY;
+
+    }
+
+    private void setupScreenTouchDispatcherView(final Context context){
+        screenTouchDispatcherView = new ScreenTouchDispatcherView(context);
 
     }
     
@@ -68,8 +68,12 @@ public class ScreenTouchDispatcherService extends Service {
         Log.d(TAG, "onDestroy");
 
         super.onDestroy();
-        getWindowManager().removeView(touchDispachView);
+//        getWindowManager().removeView(touchDispachView);
             //ビューをレイヤーから削除する
+        if(dispatcherViewController != null){
+            dispatcherViewController.removeAll();
+        }
+
     }
     
     @Override
