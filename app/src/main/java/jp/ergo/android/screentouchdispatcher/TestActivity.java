@@ -1,16 +1,74 @@
 package jp.ergo.android.screentouchdispatcher;
 
+import android.graphics.PixelFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class TestActivity extends AppCompatActivity {
+
+    private DispatcherViewController dispatcherViewController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.screen_touch_dispatch_view);
+
+
+        final LinearLayout layout = new LinearLayout(this);
+        setContentView(layout);
+
+        final Button button = new Button(this);
+        button.setText("show");
+        layout.addView(button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDispatchView2();
+            }
+        });
+    }
+
+    private void showDispatchView(){
+        final WindowManager.LayoutParams params
+                = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                0, 0,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        final ScreenTouchDispatcherView screenTouchDispatcherView = new ScreenTouchDispatcherView(this);
+        screenTouchDispatcherView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+
+
+        screenTouchDispatcherView.findViewById(R.id.root).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+
+
+        getWindowManager().addView(screenTouchDispatcherView, params);
+    }
+
+    private void showDispatchView2(){
+
+        dispatcherViewController = new DispatcherViewController(this);
+        dispatcherViewController.addToWindowManager();
     }
 
     @Override
@@ -28,7 +86,7 @@ public class TestActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_setting) {
             return true;
         }
 
