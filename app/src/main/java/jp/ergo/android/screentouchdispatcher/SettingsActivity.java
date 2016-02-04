@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -13,6 +14,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.provider.Settings;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 
@@ -44,13 +46,7 @@ public class SettingsActivity extends PreferenceActivity {
                 System.out.println("onPreferenceChange");
                 if (preference.getKey().equals("switcher")) {
                     if (newValue instanceof Boolean) {
-                        if ((Boolean) newValue) {
-                            final Intent serviceIntent = new Intent(SettingsActivity.this, ScreenTouchDispatcherService.class);
-                            startService(serviceIntent);
-                            NotificationUtils.sendNotification(SettingsActivity.this, "タッチして画面をロック");
-                        } else {
-                            NotificationUtils.removeNotification(SettingsActivity.this);
-                        }
+                        return onSwitchChanged((Boolean) newValue);
                     }
                 }
 
@@ -63,6 +59,34 @@ public class SettingsActivity extends PreferenceActivity {
 
     }
 
+    private boolean onSwitchChanged(final boolean newValue) {
+        if (newValue) {
+            if (isMorLater() && !canDrawOverlays(SettingsActivity.this)) {
+                ((SwitchPreference) findPreference("switcher")).setChecked(false);
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+                return false;
+            } else {
+                final Intent serviceIntent = new Intent(SettingsActivity.this, ScreenTouchDispatcherService.class);
+                startService(serviceIntent);
+                NotificationUtils.sendNotification(SettingsActivity.this, "タッチして画面をロック");
+            }
+
+        } else {
+            NotificationUtils.removeNotification(SettingsActivity.this);
+        }
+        return true;
+    }
+
+    private boolean isMorLater() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+    @TargetApi(23)
+    private boolean canDrawOverlays(final Context context) {
+        return Settings.canDrawOverlays(context);
+    }
 
 
     /**
