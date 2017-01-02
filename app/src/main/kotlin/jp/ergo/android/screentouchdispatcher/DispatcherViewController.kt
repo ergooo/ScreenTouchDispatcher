@@ -56,6 +56,7 @@ class DispatcherViewController(context: Context) {
     fun addToWindowManager() {
         addDispatchView()
         addSwitch()
+        dismissDispatchView()
     }
 
     fun removeAll() {
