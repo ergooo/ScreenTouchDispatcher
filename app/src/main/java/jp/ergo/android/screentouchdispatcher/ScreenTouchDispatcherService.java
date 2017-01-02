@@ -33,6 +33,7 @@ public class ScreenTouchDispatcherService extends Service {
     
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         Log.d(TAG, "onStartCommand");
         //画面に常に表示するビューのレイアウトの設定
 //        final WindowManager.LayoutParams params

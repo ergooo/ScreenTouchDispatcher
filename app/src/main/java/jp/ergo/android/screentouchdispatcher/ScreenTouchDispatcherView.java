@@ -4,13 +4,9 @@ import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-/**
- * Created by ishigayawataru on 16/01/08.
- */
 public class ScreenTouchDispatcherView extends FrameLayout {
 
     private final FloatingActionButton floatingActionButton;
