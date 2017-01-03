@@ -1,5 +1,6 @@
 package jp.ergo.android.screentouchdispatcher
 
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -11,8 +12,8 @@ object NotificationUtils {
     val NOTIFICATION_ID = 1
 
     fun createBroadcastIntent(context: Context): Intent {
-        val broadcastIntent = Intent(context, ScreenTouchDispatcherBroadcastReceiver::class.java)
-        val action = ScreenTouchDispatcherBroadcastReceiver.ACTION_SWITCH
+        val broadcastIntent = Intent(context, ScreenTouchDispatcherService::class.java)
+        val action = ScreenTouchDispatcherService.ACTION_SWITCH
         broadcastIntent.action = action
         return broadcastIntent
     }
@@ -24,19 +25,21 @@ object NotificationUtils {
 
 
     fun sendNotification(context: Context, message: String) {
+        val manager = NotificationManagerCompat.from(context)
+        manager.notify(NotificationUtils.NOTIFICATION_ID, createNotification(context, message))
+    }
+
+    fun createNotification(context: Context, message: String): Notification {
         val builder = NotificationCompat.Builder(context)
 
         val broadcastIntent = NotificationUtils.createBroadcastIntent(context)
-        val pendingIntent = PendingIntent.getBroadcast(context, 100, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getService(context, 100, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         builder.setContentIntent(pendingIntent)
         builder.setSmallIcon(R.mipmap.ic_launcher)
         builder.setContentText(message)
         builder.setOngoing(true)
-
-        val manager = NotificationManagerCompat.from(context)
-        manager.notify(NotificationUtils.NOTIFICATION_ID, builder.build())
-
+        return builder.build()
     }
 
 }

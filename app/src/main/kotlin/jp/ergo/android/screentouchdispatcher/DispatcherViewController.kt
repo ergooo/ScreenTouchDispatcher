@@ -25,14 +25,13 @@ class DispatcherViewController(context: Context) {
 
     private val switchPosition = Position()
 
+    var onDispachStateChanged: ((Boolean) -> Unit)? = null
+
     init {
         this.windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
         switch.onCheckChanged = { isChecked ->
-            when {
-                isChecked -> showDispatchView()
-                else -> dismissDispatchView()
-            }
+            setDispaching(isChecked)
         }
 
         switch.onDragging = { x, y ->
@@ -47,10 +46,12 @@ class DispatcherViewController(context: Context) {
 
     private fun showDispatchView() {
         dispatchView.visibility = VISIBLE
+        onDispachStateChanged?.invoke(true)
     }
 
     private fun dismissDispatchView() {
         dispatchView.visibility = GONE
+        onDispachStateChanged?.invoke(false)
     }
 
     fun addToWindowManager() {
@@ -96,4 +97,15 @@ class DispatcherViewController(context: Context) {
         return params
     }
 
+    fun isDispatching(): Boolean {
+        return dispatchView.isShown
+    }
+
+    fun setDispaching(dispatching: Boolean) {
+        switch.setChecked(dispatching)
+        when(dispatching) {
+            true -> showDispatchView()
+            false -> dismissDispatchView()
+        }
+    }
 }
