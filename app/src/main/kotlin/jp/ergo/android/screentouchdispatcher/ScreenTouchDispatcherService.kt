@@ -13,11 +13,11 @@ class ScreenTouchDispatcherService : Service() {
         super.onCreate()
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.d(TAG, "onStartCommand")
-        dispatcherViewController = DispatcherViewController(applicationContext)
-        dispatcherViewController!!.addToWindowManager()
+        dispatcherViewController = DispatcherViewController(this)
+        dispatcherViewController?.addToWindowManager()
 
         return Service.START_STICKY
 
@@ -28,7 +28,7 @@ class ScreenTouchDispatcherService : Service() {
         super.onDestroy()
         //ビューをレイヤーから削除する
         if (dispatcherViewController != null) {
-            dispatcherViewController!!.removeAll()
+            dispatcherViewController?.removeAll()
         }
     }
 
