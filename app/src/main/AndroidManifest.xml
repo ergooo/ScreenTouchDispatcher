@@ -21,14 +21,6 @@
 
         <service android:name=".ScreenTouchDispatcherService" />
 
-        <receiver android:name=".ScreenTouchDispatcherBroadcastReceiver" >
-            <intent-filter>
-                <action android:name="jp.ergo.android.screentouchdispatcher.SATRT_SERVICE" />
-                <action android:name="jp.ergo.android.screentouchdispatcher.STOP_SERVICE" />
-                <action android:name="jp.ergo.android.screentouchdispatcher.SWITCH" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

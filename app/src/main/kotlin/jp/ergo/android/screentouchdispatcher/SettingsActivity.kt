@@ -41,14 +41,14 @@ class SettingsActivity : SettingsActivityBase() {
                 return false
             } else {
                 val serviceIntent = Intent(this@SettingsActivity, ScreenTouchDispatcherService::class.java)
+                serviceIntent.action = ScreenTouchDispatcherService.ACTION_START
                 startService(serviceIntent)
-                NotificationUtils.sendNotification(this@SettingsActivity, "タッチして画面をロック")
             }
 
         } else {
-            NotificationUtils.removeNotification(this@SettingsActivity)
             val serviceIntent = Intent(this@SettingsActivity, ScreenTouchDispatcherService::class.java)
-            stopService(serviceIntent)
+            serviceIntent.action = ScreenTouchDispatcherService.ACTION_STOP
+            startService(serviceIntent)
         }
         return true
     }
