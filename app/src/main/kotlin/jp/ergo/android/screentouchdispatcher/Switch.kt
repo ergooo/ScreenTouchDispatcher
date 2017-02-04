@@ -1,19 +1,18 @@
 package jp.ergo.android.screentouchdispatcher
 
 import android.content.Context
+import android.support.v4.content.res.ResourcesCompat
 import android.view.MotionEvent
-import android.widget.Button
-import java.util.concurrent.atomic.AtomicBoolean
+import android.widget.ImageButton
 
 
-class Switch(context: Context) : Button(context) {
+class Switch(context: Context) : ImageButton(context) {
     var onCheckChanged: ((Boolean) -> Unit)? = null
     var onDragging: ((Int, Int) -> Unit)? = null
     private val startPosition = Position()
 
-    private val isChecked = AtomicBoolean(false)
-
     init {
+        background = ResourcesCompat.getDrawable(resources, R.drawable.switch_button, null)
         setOnTouchListener { view, motionEvent ->
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -29,7 +28,7 @@ class Switch(context: Context) : Button(context) {
                         startPosition.update(0, 0)
 
                     } else {
-                        isChecked.set(!isChecked())
+                        setChecked(!isChecked())
                         onCheckChanged?.invoke(isChecked())
                     }
                 }
@@ -43,10 +42,10 @@ class Switch(context: Context) : Button(context) {
     }
 
     fun isChecked(): Boolean {
-        return isChecked.get()
+        return isActivated
     }
 
     fun setChecked(isChecked: Boolean) {
-        this.isChecked.set(isChecked)
+       isActivated = isChecked
     }
 }
