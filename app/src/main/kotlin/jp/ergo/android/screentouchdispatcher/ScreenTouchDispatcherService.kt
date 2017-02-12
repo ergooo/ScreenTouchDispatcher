@@ -60,9 +60,9 @@ class ScreenTouchDispatcherService : Service() {
 
     private fun createNotificationMessage(isDispatching: Boolean): String {
         return if (isDispatching) {
-            "タッチしてロックを解除"
+            resources.getString(R.string.notification_dispatch_off)
         } else {
-            "タッチして画面をロック"
+            resources.getString(R.string.notification_dispatch_on)
         }
     }
 
