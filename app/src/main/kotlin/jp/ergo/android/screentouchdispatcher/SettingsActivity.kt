@@ -26,14 +26,12 @@ class SettingsActivity : SettingsActivityBase() {
 
             true
         }
-
-        bindPreferenceSummaryToValue(findPreference("example_text"))
-        bindPreferenceSummaryToValue(findPreference("example_list"))
     }
 
     private fun onSwitchChanged(newValue: Boolean): Boolean {
         if (newValue) {
             if (isMorLater && !canDrawOverlays(this@SettingsActivity)) {
+                // MならPermissionのチェック
                 (findPreference("switcher") as SwitchPreference).isChecked = false
                 val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + packageName))
