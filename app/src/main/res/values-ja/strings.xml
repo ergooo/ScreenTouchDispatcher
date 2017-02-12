@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">ScreenTouchDispatcher</string>
     <string name="pref_title_launch_service">サービスを起動する</string>
+    <string name="notification_dispatch_on">タップして画面をロック</string>
+    <string name="notification_dispatch_off">タップしてロックを解除</string>
 </resources>
