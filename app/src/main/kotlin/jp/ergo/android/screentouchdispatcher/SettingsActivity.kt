@@ -1,23 +1,25 @@
 package jp.ergo.android.screentouchdispatcher
 
 import android.annotation.TargetApi
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.*
+import android.preference.Preference
+import android.preference.SwitchPreference
 import android.provider.Settings
+
 
 class SettingsActivity : SettingsActivityBase() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.pref_general)
 
-        val switcher = findPreference("switcher")
+        val switcher = findPreference("switcher") as SwitchPreference
+        switcher.isChecked = isServiceRunning(ScreenTouchDispatcherService.javaClass)
         switcher.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
-            println("onPreferenceChange")
             if (preference.key == "switcher") {
                 if (newValue is Boolean) {
                     return@OnPreferenceChangeListener onSwitchChanged(newValue)
@@ -59,15 +61,9 @@ class SettingsActivity : SettingsActivityBase() {
         return Settings.canDrawOverlays(context)
     }
 
-    private val isServiceOn: Boolean
-        get() {
-            val preference = findPreference("switcher") as SwitchPreference
-            return preference.isChecked
-        }
-
-    private fun setServiceOn() {
-        val preference = findPreference("switcher") as SwitchPreference
-        preference.isChecked = true
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        return manager.getRunningServices(Integer.MAX_VALUE).any { serviceClass.name.startsWith(it.service.className) }
     }
 
 }
