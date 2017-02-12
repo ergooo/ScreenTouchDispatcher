@@ -3,7 +3,6 @@ package jp.ergo.android.screentouchdispatcher
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import jp.ergo.android.screentouchdispatcher.util.Logger
 
 /**
  * WindowManagerに載せるViewのコントローラと
@@ -15,17 +14,10 @@ class ScreenTouchDispatcherService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Logger.d(TAG, "onCreate")
-
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        Logger.d(TAG, "onStartCommand")
-        Logger.d(TAG, "flags: " + flags)
-        Logger.d(TAG, "startId: " + startId)
-        Logger.d(TAG, "intent: " + intent)
-        Logger.d(TAG, "dispatcherViewController: " + dispatcherViewController)
         intent?.let {
             when (it.action) {
                 ACTION_START -> {
@@ -75,7 +67,6 @@ class ScreenTouchDispatcherService : Service() {
     }
 
     override fun onDestroy() {
-        Logger.d(TAG, "onDestroy")
         super.onDestroy()
 
         NotificationUtils.removeNotification(this)
