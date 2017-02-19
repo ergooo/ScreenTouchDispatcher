@@ -4,5 +4,8 @@
         android:key="switcher"
         android:title="@string/pref_title_launch_service"
         android:defaultValue="false" />
+    <PreferenceCategory
+        android:layout="@layout/preference_admon_row">
+    </PreferenceCategory>
 
 </PreferenceScreen>
